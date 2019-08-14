@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 
 import { CONTACTS_SCREEN } from '@/features/ContactsScreen/consts';
-import { store, persistor } from '@/redux';
+import { persistor, store } from '@/redux';
 
 import routes from './routes';
 

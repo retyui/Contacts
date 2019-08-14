@@ -7,7 +7,7 @@ import styles, { getRootStylesBySize, getTextStylesBySize } from './styles';
 type Props = $ReadOnly<{|
   children: string,
   size?: number,
-  style?: {},
+  style?: any,
 |}>;
 
 const TextAvatar = ({ children, size = 50, style }: Props) => (

@@ -1,15 +1,17 @@
 // @flow
 import { fromPairs } from 'ramda';
+
+import { USERS_STORE_KEY } from '../consts';
 import {
   EMAIL_ADDRESS_KEY,
-  PHONE_NUMBER_KEY,
-  LAST_NAME_KEY,
   FIRST_NAME_KEY,
+  LAST_NAME_KEY,
+  PHONE_NUMBER_KEY,
 } from '../consts/keys';
 import { getFilteredIds, getIndexByFirstLetter } from '../selectors';
 
 const simulateUserState = usersPairs => ({
-  users: fromPairs(usersPairs),
+  [USERS_STORE_KEY]: fromPairs(usersPairs),
 });
 
 describe('getFilteredIds', () => {

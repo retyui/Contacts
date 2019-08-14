@@ -1,50 +1,74 @@
 // @flow
-import { head, groupBy, pipe, toPairs, map, prop, keys, sortBy } from 'ramda';
-import { createSelector } from 'reselect';
+import {
+  groupBy,
+  head,
+  keys,
+  map,
+  path,
+  pipe,
+  prop,
+  sortBy,
+  toPairs,
+} from 'ramda';
 
+import { USERS_STORE_KEY } from './consts';
+import {
+  EMAIL_ADDRESS_KEY,
+  FIRST_NAME_KEY,
+  LAST_NAME_KEY,
+  PHONE_NUMBER_KEY,
+} from './consts/keys';
+import type { State as UserState } from './reducers/users';
+import type { UserAttributes, UserId } from './types';
 import { hasSubString } from './utils';
 
-import type { UserAttributes, UserId } from './types';
+type State = {
+  +users: UserState,
+};
 
-const getRoot = prop('users');
+const getRoot = prop(USERS_STORE_KEY);
 
-export const getAllUsersIds = createSelector(
+export const getAllUsersIds = pipe(
   getRoot,
-  map => keys(map),
+  keys,
 );
 
-const getUserPropById = <Prop: $Keys<UserAttributes>>(propName: Prop) => (
-  state: any,
-  id: UserId,
-): $ElementType<UserAttributes, Prop> => getRoot(state)[id][propName];
+const getUserPropById = <Key: *>(propName: Key) => (
+  state: State,
+  userId: UserId,
+): $ElementType<UserAttributes, Key> =>
+  pipe(
+    getRoot,
+    path([userId, propName]),
+  )(state);
 
-export const getUserFirstName = getUserPropById<'firstName'>('firstName');
+export const getUserFirstName = getUserPropById(FIRST_NAME_KEY);
 
-export const getUserLastName = getUserPropById('lastName');
+export const getUserLastName = getUserPropById(LAST_NAME_KEY);
 
-export const getUserEmail = getUserPropById('email');
+export const getUserEmail = getUserPropById(EMAIL_ADDRESS_KEY);
 
-export const getUserPhoneNumber = getUserPropById('phoneNumber');
+export const getUserPhoneNumber = getUserPropById(PHONE_NUMBER_KEY);
 
 export const getFirstLetter = pipe(
   getUserFirstName,
   head,
 );
 
-export const getUserInitials = (state, id: UserId): string => {
-  const first = getUserFirstName(state, id);
-  const last = getUserLastName(state, id);
+export const getUserInitials = (state: State, userId: UserId): string => {
+  const first = getUserFirstName(state, userId);
+  const last = getUserLastName(state, userId);
 
   if (last) {
-    return `${head(first)} ${head(last)}`;
+    return `${head(first)}${head(last)}`;
   }
 
   return head(first);
 };
 
-export const getUserFullName = (state, id: UserId): string => {
-  const first = getUserFirstName(state, id);
-  const last = getUserLastName(state, id);
+export const getUserFullName = (state: State, userId: UserId): string => {
+  const first = getUserFirstName(state, userId);
+  const last = getUserLastName(state, userId);
 
   if (last) {
     return `${first} ${last}`;
@@ -53,7 +77,7 @@ export const getUserFullName = (state, id: UserId): string => {
   return first;
 };
 
-export const getFilteredIds = (state, query: string) => {
+export const getFilteredIds = (state: State, query: string) => {
   const allIds = getAllUsersIds(state);
 
   if (!query) {
@@ -69,7 +93,7 @@ export const getFilteredIds = (state, query: string) => {
   });
 };
 
-export const getIndexByFirstLetter = (state, query: string) => {
+export const getIndexByFirstLetter = (state: State, query: string) => {
   const ids = getFilteredIds(state, query);
 
   return pipe(

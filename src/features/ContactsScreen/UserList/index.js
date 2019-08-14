@@ -4,26 +4,30 @@ import { SectionList } from 'react-native';
 
 import SectionHeader from '../SectionHeader';
 import UserListItem from '../UserListItem';
+import { ITEM_HEIGHT } from '../UserListItem/styles';
 import styles from './styles';
 
-type Props = $ReadOnly<{|
-  // TODO
-  sections: any,
-|}>;
+type Props = $ReadOnly<{| sections: Array<any> |}>;
 
+const keyExtractor = userId => userId;
 const renderItem = ({ item: userId }) => <UserListItem userId={userId} />;
 const renderSectionHeader = ({ section: { key } }) => (
   <SectionHeader title={key} />
 );
-const keyExtractor = userId => userId;
+const getItemLayout = (_, index) => ({
+  length: ITEM_HEIGHT,
+  offset: ITEM_HEIGHT * index,
+  index,
+});
 
-const UserList = ({ sections }: Props) => (
+const UserList = (props: Props) => (
   <SectionList
+    {...props}
     style={styles.root}
     renderItem={renderItem}
     renderSectionHeader={renderSectionHeader}
-    sections={sections}
     keyExtractor={keyExtractor}
+    getItemLayout={getItemLayout}
   />
 );
 
