@@ -1,34 +1,44 @@
 // @flow
-import React from 'react';
-import { SafeAreaView, View } from 'react-native';
-import { useNavigationParam } from 'react-navigation-hooks';
+import React, { useCallback } from 'react';
+import { SafeAreaView, ScrollView, View } from 'react-native';
+import { useNavigation, useNavigationParam } from 'react-navigation-hooks';
+import { useDispatch } from 'react-redux';
 
 import TextAvatar from '@/components/TextAvatar';
-import { getUserFullName, getUserInitials } from '@/features/users/selectors';
+import { updateUser } from '@/features/users/actions';
+import { getUserInitials } from '@/features/users/selectors';
 import { useSelector } from '@/redux/hooks';
 
 import { USER_ID_PARAM } from './consts/screenParams';
 import EditContactButton from './EditContactButton';
-import EmailRow from './EmailRow';
-import PhoneRow from './PhoneRow';
-import Row from './Row';
+import Form from './Form';
+import RemoveButton from './RemoveButton';
 import styles, { AVATAR_SIZE } from './styles';
 
 const ContactScreen = () => {
+  const dispatch = useDispatch();
+  const { goBack } = useNavigation();
   const userId: string = useNavigationParam(USER_ID_PARAM);
   const initials = useSelector(getUserInitials, [userId]);
-  const fullName = useSelector(getUserFullName, [userId]);
+  const onSubmit = useCallback(
+    values => {
+      goBack();
+      dispatch(updateUser({ ...values, id: userId }));
+    },
+    [dispatch, goBack, userId],
+  );
 
   return (
     <SafeAreaView style={styles.root}>
-      <View style={styles.userCard}>
-        <TextAvatar style={styles.avatar} size={AVATAR_SIZE}>
-          {initials}
-        </TextAvatar>
-        <Row label="Name">{fullName}</Row>
-        <PhoneRow userId={userId} />
-        <EmailRow userId={userId} />
-      </View>
+      <ScrollView>
+        <View style={styles.userCard}>
+          <TextAvatar style={styles.avatar} size={AVATAR_SIZE}>
+            {initials}
+          </TextAvatar>
+          <Form userId={userId} onSubmit={onSubmit} />
+        </View>
+        <RemoveButton userId={userId} />
+      </ScrollView>
     </SafeAreaView>
   );
 };

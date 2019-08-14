@@ -1,6 +1,6 @@
 // @flow
 import React from 'react';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 
 import styles from './styles';
 
@@ -9,7 +9,9 @@ type Props = $ReadOnly<{|
 |}>;
 
 const SectionHeader = ({ title }: Props) => (
-  <Text style={styles.root}>{title}</Text>
+  <View style={styles.root}>
+    <Text>{title}</Text>
+  </View>
 );
 
 export default SectionHeader;

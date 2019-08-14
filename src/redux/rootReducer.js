@@ -1,8 +1,10 @@
 // @flow
-import { combineReducers } from 'redux';
+import { type Action, combineReducers } from 'redux';
 
-import users from '@/features/users/reducer';
+import usersReducers from '@/features/users/reducers';
 
-const appReducer = combineReducers({ users });
+const appReducer = combineReducers<*, Action<any>>({
+  ...usersReducers,
+});
 
 export default appReducer;

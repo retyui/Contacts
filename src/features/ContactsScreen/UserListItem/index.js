@@ -12,7 +12,7 @@ import {
 } from '@/features/users/selectors';
 import { useSelector } from '@/redux/hooks';
 
-import styles from './styles';
+import styles, { AVATAR_SIZE } from './styles';
 
 type Props = $ReadOnly<{|
   userId: string,
@@ -28,7 +28,7 @@ const UserListItem = ({ userId }: Props) => {
   return (
     <Touchable onPress={onPress}>
       <View style={styles.root}>
-        <TextAvatar>{userInitials}</TextAvatar>
+        <TextAvatar size={AVATAR_SIZE}>{userInitials}</TextAvatar>
         <View style={styles.textRoot}>
           <Text style={styles.fullNameText}>{fullName}</Text>
           <Text style={styles.phoneText}>{phoneNumber}</Text>

@@ -1,18 +1,15 @@
-// @flow
-import type { Action } from 'redux';
+import { useCallback } from 'react';
+import { useDispatch, useSelector as useReduxSelector } from 'react-redux';
 
-import type { ReduxState } from '@/types';
+const defaultDeps = [];
 
-import {
-  useDispatch as baseUseDispatch,
-  useSelector as baseUseSelector,
-} from './implementation';
+export const useSelector = (selectorFn, selectorDeps = defaultDeps) => {
+  const memoizedSelector = useCallback(
+    state => selectorFn(state, ...selectorDeps),
+    [selectorDeps, selectorFn],
+  );
 
-type UseSelectorFn = {
-  <R>(fn: (ReduxState) => R, deps?: Array<empty>): R,
-  <R, A1, Deps: [A1]>(fn: (ReduxState, A1) => R, deps: Deps): R,
-  <R, A1, A2, Deps: [A1, A2]>(fn: (ReduxState, A1, A2) => R, deps: Deps): R,
+  return useReduxSelector(memoizedSelector);
 };
 
-export const useSelector: UseSelectorFn = baseUseSelector;
-export const useDispatch: () => (action: Action<any>) => void = baseUseDispatch;
+export { useDispatch };

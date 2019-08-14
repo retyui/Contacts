@@ -1,5 +1,5 @@
 // @flow
-import { toLower, replace, pipe } from 'ramda';
+import { pipe, replace, toLower } from 'ramda';
 
 const removeSpaces = replace(/\s/g, '');
 

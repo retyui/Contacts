@@ -1,7 +1,7 @@
 // @flow
-import { compose, createStore } from 'redux';
-import { persistStore, persistReducer } from 'redux-persist';
 import AsyncStorage from '@react-native-community/async-storage';
+import { compose, createStore } from 'redux';
+import { persistReducer, persistStore } from 'redux-persist';
 
 import rootReducer from './rootReducer';
 
@@ -16,6 +16,7 @@ const composeEnhancers =
     : compose;
 
 export default () => {
+  // $FlowFixMe
   const store = createStore(
     persistReducer(persistConfig, rootReducer),
     composeEnhancers(),

@@ -1,30 +1,62 @@
 // @flow
+import { useField, useFormikContext } from 'formik';
+import React, {
+  type ComponentType,
+  type ElementConfig,
+  Fragment,
+  useCallback,
+} from 'react';
 import { TextInput } from 'react-native';
-import { useField, useFormik } from 'formik';
-import React, { Fragment, type ElementConfig } from 'react';
 
-type Props = $Diff<
-  ElementConfig<typeof TextInput>,
-  {
-    name: any,
-    error: any,
-    // Provided from fieldProps
-    value: any,
-    onChange: any,
-    onBlur: any,
-  },
->;
+import FieldErrorMessage from '@/components/FieldErrorMessage';
 
-const FormikTextInput = ({ name, ...props }: Props) => {
-  const formik = useFormik();
+type Props = $ReadOnly<{|
+  ...$Exact<$Diff<ElementConfig<typeof TextInput>, { value: any }>>,
+  ErrorComponent?: ComponentType<{| +error: ?string |}>,
+  fieldName: string,
+|}>;
 
-  console.log(' --- formik', formik);
-  const [fieldProps, { touched, error }] = useField(name);
+const FormikTextInput = ({
+  ErrorComponent = FieldErrorMessage,
+  fieldName,
+  onBlur,
+  onChangeText,
+  ...props
+}: Props) => {
+  const [{ value }, { touched, error }] = useField(fieldName);
+  const { setFieldTouched, setFieldValue } = useFormikContext();
+  const onBlurHandler = useCallback(
+    event => {
+      setFieldTouched(fieldName, true);
+
+      if (onBlur) {
+        onBlur(event);
+      }
+    },
+    [setFieldTouched, fieldName, onBlur],
+  );
+  const onChangeTextHandler = useCallback(
+    (val: string) => {
+      setFieldValue(fieldName, val);
+
+      if (onChangeText) {
+        onChangeText(value);
+      }
+    },
+    [setFieldValue, fieldName, onChangeText, value],
+  );
+
   const hasError = Boolean(touched && error);
 
   return (
     <Fragment>
-      <TextInput {...props} />
+      <TextInput
+        {...props}
+        value={value}
+        onChangeText={onChangeTextHandler}
+        onBlur={onBlurHandler}
+      />
+      <ErrorComponent error={hasError ? error : null} />
     </Fragment>
   );
 };

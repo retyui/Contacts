@@ -2,8 +2,9 @@
 import React, { type Element, cloneElement } from 'react';
 import { Text, View } from 'react-native';
 
-import styles from './styles';
 import { concatStyles } from '@/utils/styles';
+
+import styles from './styles';
 
 type Props = $ReadOnly<{|
   label: string,

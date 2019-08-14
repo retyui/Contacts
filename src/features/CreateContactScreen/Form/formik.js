@@ -3,18 +3,18 @@ import { withFormik } from 'formik';
 import { object, string } from 'yup';
 
 import {
-  PHONE_NUMBER_KEY,
-  LAST_NAME_KEY,
   EMAIL_ADDRESS_KEY,
   FIRST_NAME_KEY,
-} from './fields';
-import type {  , Values } from './types';
+  LAST_NAME_KEY,
+  PHONE_NUMBER_KEY,
+} from './consts/fields';
+import type { Props, Values } from './types';
 
 export default withFormik<Props, Values>({
   mapPropsToValues: ({
-    initialLastName = '',
+    initialLastName = null,
     initialFirstName = '',
-    initialEmailAddress = '',
+    initialEmailAddress = null,
     initialPhoneNumber = '',
   }) => ({
     [PHONE_NUMBER_KEY]: initialPhoneNumber,
@@ -25,11 +25,14 @@ export default withFormik<Props, Values>({
   validationSchema: object().shape({
     [PHONE_NUMBER_KEY]: string().required('Phone is a required field'),
     [FIRST_NAME_KEY]: string().required('First name is a required field'),
-    [LAST_NAME_KEY]: string(),
-    [EMAIL_ADDRESS_KEY]: string(),
+    [LAST_NAME_KEY]: string().nullable(),
+    [EMAIL_ADDRESS_KEY]: string()
+      .email('Please enter a valid email address')
+      .nullable(),
   }),
   handleSubmit: (values, { props, setSubmitting }) => {
     props.onSubmit(values);
+
     setSubmitting(false);
   },
 });
