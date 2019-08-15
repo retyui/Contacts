@@ -4,21 +4,20 @@
 
 **1. What went well?**
 
-- Share a common `<Form />` component for CreateContact and EditContact screens.
-- A similar design for both platform without noticeable differences
-- Offline mode
+- Shared `<Form />` component for CreateContact and EditContact screens
+- Offline mode implemetation
+- Using new React features: Hooks, etc
 
 **2. What didn’t go well?**
 
-2.1. On condition of tight deadlines, I had to use `redux-persist`(it is not really good way to serialize a redux
-store and storage).
-
-2.2. Not enough strong test and types coverage
+- Low test coverage
 
 **3. If you had more time to work on this**
 
-I would add support dark theme (iOS, Android), also integrate i18n and improve code style.
-
+- make code style improvements
+- increase test coverage
+- add internalization (i18n)
+- implement convinient input switch
 ---
 
 ## Screenshots
